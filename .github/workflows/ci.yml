@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/**"
+      - "fix/**"
+      - "docs/**"
+      - "chore/**"
+      - "refactor/**"
+      - "test/**"
+      - "perf/**"
+      - "build/**"
+      - "ci/**"
+      - "security/**"
+      - "release/**"
+      - "hotfix/**"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - "20.19.0"
+          - "22"
+          - "24"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run check

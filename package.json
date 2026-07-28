@@ -1,0 +1,74 @@
+{
+  "name": "stable-marker-layout",
+  "version": "0.1.0",
+  "description": "Deterministic, projection-agnostic layout and decluttering for moving point annotations.",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./geometry": {
+      "types": "./src/geometry.d.ts",
+      "import": "./src/geometry.js"
+    },
+    "./variants": {
+      "types": "./src/variants.d.ts",
+      "import": "./src/variants.js"
+    },
+    "./projected": {
+      "types": "./src/projected.d.ts",
+      "import": "./src/projected.js"
+    }
+  },
+  "files": [
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md"
+  ],
+  "scripts": {
+    "benchmark": "node benchmark/layout.mjs",
+    "test": "node --test",
+    "coverage": "node --experimental-test-coverage --test",
+    "lint": "node --check src/*.js test/*.js scripts/*.mjs examples/*.mjs benchmark/*.mjs",
+    "typecheck": "tsc --project tsconfig.json",
+    "example": "node examples/basic.mjs",
+    "package:lint": "publint",
+    "package:types": "node scripts/check-package-types.mjs",
+    "package:smoke": "node scripts/verify-package.mjs",
+    "check": "npm run lint && npm run typecheck && npm run coverage && npm run example && npm run package:lint && npm run package:types && npm run package:smoke",
+    "prepublishOnly": "npm run check"
+  },
+  "keywords": [
+    "marker",
+    "label",
+    "declutter",
+    "collision",
+    "layout",
+    "map"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "author": "seoulpro <lim@limsumin.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seoulpro/stable-marker-layout.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seoulpro/stable-marker-layout/issues"
+  },
+  "homepage": "https://github.com/seoulpro/stable-marker-layout#readme",
+  "license": "MIT",
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "publint": "0.3.22",
+    "typescript": "7.0.2"
+  }
+}
