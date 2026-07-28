@@ -436,4 +436,7 @@ npm run benchmark
 
 ## License
 
-[MIT](./LICENSE)
+The software and associated documentation are available under the
+[MIT License](./LICENSE). The repository's
+[Code of Conduct](https://github.com/seoulpro/stable-marker-layout/blob/main/CODE_OF_CONDUCT.md)
+is separately licensed under CC BY 4.0 as stated in that file.

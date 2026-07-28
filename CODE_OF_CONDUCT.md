@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+
 # Code of Conduct
 
 ## Purpose
@@ -34,5 +36,14 @@ sensitive details. Security vulnerabilities should follow
 Maintainers may clarify these standards and take proportionate action,
 including editing or removing contributions, warnings, or access restrictions.
 
-This code is adapted from common open-source community guidelines, including
-the spirit of the Contributor Covenant.
+## Attribution
+
+This document is adapted from the [Contributor Covenant][contributor-covenant],
+version 2.1, created by Coraline Ada Ehmke. It has been shortened and modified
+for this project's scope, reporting process, and enforcement approach.
+
+The Contributor Covenant and this adaptation are licensed under the
+[Creative Commons Attribution 4.0 International License][cc-by-4.0].
+
+[contributor-covenant]: https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
+[cc-by-4.0]: https://creativecommons.org/licenses/by/4.0/
