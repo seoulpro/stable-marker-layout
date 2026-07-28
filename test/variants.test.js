@@ -100,4 +100,13 @@ test("point variants reject unsupported or incomplete placement input", () => {
       ),
     /duplicate placement/,
   );
+  assert.throws(
+    () =>
+      createPointVariants({
+        width: Number.MAX_VALUE,
+        height: 1,
+        anchor: { x: 2, y: 0 },
+      }),
+    /finite non-empty geometry/,
+  );
 });

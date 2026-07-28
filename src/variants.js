@@ -6,6 +6,17 @@ const VALID_PLACEMENTS = new Set([
   "marker-only",
 ]);
 
+const assertRenderableBox = (box, name) => {
+  if (
+    ![box.left, box.right, box.top, box.bottom].every(Number.isFinite) ||
+    box.right <= box.left ||
+    box.bottom <= box.top
+  ) {
+    throw new RangeError(`${name} must produce finite non-empty geometry`);
+  }
+  return box;
+};
+
 const assertPositiveDimension = (value, name) => {
   if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
     throw new RangeError(`${name} must be a finite number greater than zero`);
@@ -39,12 +50,15 @@ const resolveMarkerBox = (marker) => {
   const left = -marker.width * anchor.x;
   const top = -marker.height * anchor.y;
 
-  return {
-    left,
-    right: left + marker.width,
-    top,
-    bottom: top + marker.height,
-  };
+  return assertRenderableBox(
+    {
+      left,
+      right: left + marker.width,
+      top,
+      bottom: top + marker.height,
+    },
+    "marker",
+  );
 };
 
 const resolveLabelBox = (markerBox, label, placement) => {
@@ -81,12 +95,15 @@ const resolveLabelBox = (markerBox, label, placement) => {
       throw new RangeError(`unsupported label placement: ${placement}`);
   }
 
-  return {
-    left,
-    right: left + label.width,
-    top,
-    bottom: top + label.height,
-  };
+  return assertRenderableBox(
+    {
+      left,
+      right: left + label.width,
+      top,
+      bottom: top + label.height,
+    },
+    "label",
+  );
 };
 
 export const createPointVariants = (point, placements) => {

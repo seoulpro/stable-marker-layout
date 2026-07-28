@@ -303,4 +303,12 @@ test("layout rejects duplicate ids and invalid configuration", () => {
       ),
     /not a stable-marker-layout state/,
   );
+  assert.throws(
+    () =>
+      layoutMarkers(
+        { viewport, markers: [] },
+        { boxIndexMaxCellsPerBox: 0 },
+      ),
+    /positive safe integer/,
+  );
 });

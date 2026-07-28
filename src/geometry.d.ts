@@ -15,10 +15,15 @@ export interface BoxIndex<Value = unknown> {
   clear(): void;
 }
 
+export interface BoxIndexOptions {
+  cellSize?: number;
+  maxCellsPerBox?: number;
+}
+
 export function boxesIntersect(a: Box, b: Box): boolean;
 export function expandBox(box: Box, padding?: number): Box;
 export function intersectBoxes(a: Box, b: Box): Box | null;
 export function unionBoxes(boxes: readonly Box[]): Box | null;
-export function createBoxIndex<Value = unknown>(options?: {
-  cellSize?: number;
-}): BoxIndex<Value>;
+export function createBoxIndex<Value = unknown>(
+  options?: number | BoxIndexOptions,
+): BoxIndex<Value>;

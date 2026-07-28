@@ -70,6 +70,7 @@ export interface LayoutOptions {
   collisionPadding?: number;
   viewportPadding?: number;
   boxIndexCellSize?: number;
+  boxIndexMaxCellsPerBox?: number;
   seed?: string | number;
   stabilityKey?: LayoutEpoch;
 }
@@ -137,7 +138,7 @@ export interface LayoutDiagnostics<Id extends MarkerId = MarkerId> {
   density: {
     cellSize: number;
     maxPerCell: number | null;
-    stage: string | number | null;
+    stage: number;
   };
   byReason: Record<HiddenReason, number>;
   pinnedOverlapCount: number;

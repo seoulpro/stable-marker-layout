@@ -7,8 +7,6 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-07-28
-
 ### Added
 
 - Deterministic one-shot and stateful marker layout APIs.
@@ -17,6 +15,4 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Progressive pressure-based density limits with cell backfill.
 - Projection adapters for arbitrary source coordinates.
 - Serializable state, hidden reasons, and layout diagnostics.
-
-[Unreleased]: https://github.com/seoulpro/stable-marker-layout/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/seoulpro/stable-marker-layout/releases/tag/v0.1.0
+- Bounded collision-index traversal for adversarial geometry.

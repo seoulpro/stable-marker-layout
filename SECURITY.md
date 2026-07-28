@@ -23,7 +23,8 @@ later calls, or inconsistent validation between one-shot and stateful APIs.
 Ordinary placement-quality disagreements are correctness or design issues, not
 security issues.
 
-The package validates finite geometry and numeric options, but it does not
-impose a universal marker-count or box-size limit. Applications accepting
-untrusted input should bound marker counts, boxes per variant, coordinate
-ranges, and maximum box extent before calling the engine.
+The package validates finite geometry and numeric options. Its collision index
+also rejects unsafe grid coordinates and imposes a configurable per-box cell
+limit. It does not impose a universal marker-count limit. Applications
+accepting untrusted input should still bound marker counts, boxes per variant,
+coordinate ranges, and maximum box extent before calling the engine.

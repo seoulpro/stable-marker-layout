@@ -23,8 +23,11 @@ SDK, coordinate reference system, DOM, Canvas, SVG, WebGL, or React.
 
 ## Install
 
+The package has not yet been published to the npm registry. To evaluate the
+current repository version:
+
 ```sh
-npm install stable-marker-layout
+npm install github:seoulpro/stable-marker-layout
 ```
 
 The package is ESM-only and supports Node.js 20.19 or newer. Its runtime code is
@@ -353,6 +356,13 @@ needed. Returning `null` means `not-projectable`.
     hiddenCount: 1,
     retainedCount: 1,
     changedCount: 0,
+    collisionChecks: 7,
+    pressure: 0.4,
+    density: {
+      cellSize: 128,
+      maxPerCell: 4,
+      stage: 0.35,
+    },
     pinnedOverlapCount: 0,
     byReason: {
       "not-projectable": 0,
@@ -391,6 +401,34 @@ For the same frame, previous state, and options:
 Malformed viewports, dimensions, boxes, IDs, states, density policies, and
 non-finite projected coordinates fail with an explicit error.
 
+## Resource limits
+
+The collision index rejects boxes whose derived grid coordinates are outside
+JavaScript's safe integer range. It also limits each box to 65,536 grid cells
+by default so a very small cell size or very large box fails before iteration.
+
+Set `boxIndexMaxCellsPerBox` on a layout to change that per-box limit. Direct
+users of the geometry index can set `maxCellsPerBox`:
+
+```js
+import { createMarkerLayout } from "stable-marker-layout";
+import { createBoxIndex } from "stable-marker-layout/geometry";
+
+const layout = createMarkerLayout({
+  boxIndexCellSize: 96,
+  boxIndexMaxCellsPerBox: 16_384,
+});
+
+const index = createBoxIndex({
+  cellSize: 96,
+  maxCellsPerBox: 16_384,
+});
+```
+
+This guard does not impose a total marker-count limit. Applications accepting
+untrusted input should still bound marker counts, boxes per variant, coordinate
+ranges, and box extents according to their latency and memory budgets.
+
 ## Geometry helpers
 
 The `stable-marker-layout/geometry` export provides:
@@ -399,7 +437,7 @@ The `stable-marker-layout/geometry` export provides:
 - `expandBox(box, padding)`
 - `intersectBoxes(a, b)`
 - `unionBoxes(boxes)`
-- `createBoxIndex({ cellSize })`
+- `createBoxIndex({ cellSize, maxCellsPerBox })`
 
 The grid index supports `add`, `firstCollision`, `allCollisions`, `search`,
 `collides`, and `clear`.

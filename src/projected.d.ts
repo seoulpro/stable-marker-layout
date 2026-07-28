@@ -50,7 +50,7 @@ export interface ProjectedMarkerAdapter<
     item: Item,
     view: View,
     index: number,
-  ): ProjectedMarkerDescriptor<Id>;
+  ): ProjectedMarkerDescriptor<Id> | null | undefined;
   id?(item: Item, index: number): Id;
   project(item: Item, view: View, index: number): ProjectedPoint | null;
   dimensions?(

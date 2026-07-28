@@ -1,4 +1,5 @@
 const NUMBER_FIELDS = ["left", "right", "top", "bottom"];
+const DEFAULT_MAX_CELLS_PER_BOX = 65_536;
 
 const assertFiniteNumber = (value, name) => {
   if (typeof value !== "number" || !Number.isFinite(value)) {
@@ -32,12 +33,14 @@ export const boxesIntersect = (a, b) => {
 export const expandBox = (box, padding = 0) => {
   assertBox(box);
   assertFiniteNumber(padding, "padding");
-  return {
+  const expanded = {
     left: box.left - padding,
     right: box.right + padding,
     top: box.top - padding,
     bottom: box.bottom + padding,
   };
+  assertBox(expanded, "expanded box");
+  return expanded;
 };
 
 export const intersectBoxes = (a, b) => {
@@ -82,9 +85,16 @@ const cellKey = (x, y) => `${x},${y}`;
 export const createBoxIndex = (options = {}) => {
   const cellSize =
     typeof options === "number" ? options : options?.cellSize ?? 96;
+  const maxCellsPerBox =
+    typeof options === "number"
+      ? DEFAULT_MAX_CELLS_PER_BOX
+      : options?.maxCellsPerBox ?? DEFAULT_MAX_CELLS_PER_BOX;
   assertFiniteNumber(cellSize, "cellSize");
   if (cellSize <= 0) {
     throw new RangeError("cellSize must be greater than zero");
+  }
+  if (!Number.isSafeInteger(maxCellsPerBox) || maxCellsPerBox <= 0) {
+    throw new RangeError("maxCellsPerBox must be a positive safe integer");
   }
 
   const cells = new Map();
@@ -96,21 +106,36 @@ export const createBoxIndex = (options = {}) => {
     const minY = Math.floor(box.top / cellSize);
     const maxY = Math.floor(box.bottom / cellSize);
 
+    if (![minX, maxX, minY, maxY].every(Number.isSafeInteger)) {
+      throw new RangeError("box produces grid coordinates outside the safe integer range");
+    }
+
+    const width = maxX - minX + 1;
+    const height = maxY - minY + 1;
+    if (
+      !Number.isSafeInteger(width) ||
+      !Number.isSafeInteger(height) ||
+      width > Math.floor(maxCellsPerBox / height)
+    ) {
+      throw new RangeError(
+        `box spans more than ${maxCellsPerBox} grid cells`,
+      );
+    }
+
     for (let y = minY; y <= maxY; y += 1) {
       for (let x = minX; x <= maxX; x += 1) {
-        visit(cellKey(x, y));
+        if (visit(cellKey(x, y)) === false) return false;
       }
     }
+    return true;
   };
 
   const findEntries = (candidate, stopAfterFirst) => {
     assertBox(candidate, "candidate");
     const seen = new Set();
     const matches = [];
-    let stopped = false;
 
     eachCell(candidate, (key) => {
-      if (stopped) return;
       const bucket = cells.get(key);
       if (!bucket) return;
 
@@ -120,8 +145,7 @@ export const createBoxIndex = (options = {}) => {
         if (!boxesIntersect(entry.box, candidate)) continue;
         matches.push(entry);
         if (stopAfterFirst) {
-          stopped = true;
-          return;
+          return false;
         }
       }
     });

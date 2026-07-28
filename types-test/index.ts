@@ -10,11 +10,15 @@ import {
 } from "stable-marker-layout";
 
 const obstacle: Box = { left: 0, right: 10, top: 0, bottom: 10 };
-const index = createBoxIndex<string>({ cellSize: 32 });
+const index = createBoxIndex<string>({
+  cellSize: 32,
+  maxCellsPerBox: 4_096,
+});
 index.add(obstacle, "toolbar");
 const owner: { box: Box; value: string } | null =
   index.firstCollision(obstacle);
 void owner;
+void createBoxIndex(32);
 
 const variants = createPointVariants({
   marker: { width: 20, height: 30, anchor: "bottom" },
@@ -43,6 +47,7 @@ const oneShot: LayoutResult = layoutMarkers(frame);
 void oneShot;
 
 const session = createMarkerLayout({
+  boxIndexMaxCellsPerBox: 4_096,
   density: {
     cellSize: 96,
     stops: [{ minPressure: 0, maxPerCell: 2 }],

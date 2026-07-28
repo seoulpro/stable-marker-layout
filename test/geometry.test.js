@@ -86,4 +86,37 @@ test("geometry rejects inverted or non-finite boxes", () => {
       ]),
     /finite number/,
   );
+  assert.throws(
+    () =>
+      expandBox(
+        {
+          left: -Number.MAX_VALUE,
+          right: Number.MAX_VALUE,
+          top: -1,
+          bottom: 1,
+        },
+        Number.MAX_VALUE,
+      ),
+    /finite number/,
+  );
+});
+
+test("box index rejects invalid or excessive cell budgets", () => {
+  assert.throws(
+    () => createBoxIndex({ maxCellsPerBox: 0 }),
+    /positive safe integer/,
+  );
+
+  const index = createBoxIndex({
+    cellSize: 10,
+    maxCellsPerBox: 4,
+  });
+  assert.throws(
+    () =>
+      index.add(
+        { left: 0, right: 20, top: 0, bottom: 10 },
+        "too-wide",
+      ),
+    /more than 4 grid cells/,
+  );
 });

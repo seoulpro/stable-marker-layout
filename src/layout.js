@@ -533,7 +533,10 @@ const runLayout = (previousState, frame, options = {}) => {
   });
   entries.sort(compareEntries);
 
-  const boxIndex = createBoxIndex({ cellSize: boxIndexCellSize });
+  const boxIndex = createBoxIndex({
+    cellSize: boxIndexCellSize,
+    maxCellsPerBox: options.boxIndexMaxCellsPerBox,
+  });
   const obstacles = normalizeObstacles(
     frame.obstacles ?? frame.obstacleBoxes,
   );
