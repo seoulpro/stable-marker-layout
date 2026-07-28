@@ -90,6 +90,9 @@ try {
         createPointVariants,
         layoutMarkers,
       } from "stable-marker-layout";
+      import {
+        createProjectedMarkerLayout,
+      } from "stable-marker-layout/projected";
 
       const variants = createPointVariants({
         marker: { width: 10, height: 10 },
@@ -112,6 +115,99 @@ try {
         markers: [{ id: "b", x: 50, y: 50, width: 10, height: 10 }],
       }).visible[0]?.id !== "b") {
         throw new Error("session export failed");
+      }
+
+      const items = [
+        {
+          key: "alpha",
+          point: { horizontal: 20, vertical: 10, elevation: 5 },
+          size: { width: 12, height: 16 },
+          weight: 2,
+        },
+        {
+          key: "beta",
+          point: { horizontal: 28, vertical: 12, elevation: 2 },
+          size: { width: 10, height: 14 },
+          weight: 1,
+        },
+        {
+          key: "filtered",
+          point: null,
+          size: { width: 10, height: 10 },
+          weight: 0,
+        },
+      ];
+      const view = {
+        origin: { x: 40, y: 100 },
+        scale: 2,
+        viewport: { width: 240, height: 160 },
+        pressure: 0.4,
+        revision: "fixture-1",
+      };
+      const createProjected = () =>
+        createProjectedMarkerLayout({
+          describe(item) {
+            return {
+              id: item.key,
+              marker: item.size,
+              priority: item.weight,
+            };
+          },
+          project(item, currentView) {
+            if (!item.point) return null;
+            return {
+              x:
+                currentView.origin.x +
+                item.point.horizontal * currentView.scale,
+              y:
+                currentView.origin.y -
+                (item.point.vertical + item.point.elevation) *
+                  currentView.scale,
+              depth: item.point.elevation,
+            };
+          },
+          viewport: (currentView) => currentView.viewport,
+          pressure: (currentView) => currentView.pressure,
+          epoch: (currentView) => currentView.revision,
+        });
+
+      const forward = createProjected().update({ items, view });
+      const reversed = createProjected().update({
+        items: [...items].reverse(),
+        view,
+      });
+      if (JSON.stringify(reversed) !== JSON.stringify(forward)) {
+        throw new Error("projected layout depends on input order");
+      }
+      if (
+        forward.visible.length + forward.hidden.length !== items.length ||
+        forward.hidden.find((entry) => entry.id === "filtered")?.reason !==
+          "not-projectable"
+      ) {
+        throw new Error("projected layout decision contract failed");
+      }
+
+      const renderHandoff = forward.visible.map((entry) => ({
+        id: entry.id,
+        variantKey: entry.variantKey,
+        anchor: entry.anchor,
+        boxes: entry.boxes,
+      }));
+      if (
+        renderHandoff.some((entry) =>
+          entry.boxes.some((box) =>
+            [box.left, box.right, box.top, box.bottom].some(
+              (value) => !Number.isFinite(value),
+            ),
+          ),
+        )
+      ) {
+        throw new Error("render handoff contains non-finite geometry");
+      }
+      if (
+        JSON.stringify(structuredClone(forward)) !== JSON.stringify(forward)
+      ) {
+        throw new Error("projected layout result is not clone compatible");
       }
     `,
   );
