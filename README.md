@@ -23,11 +23,8 @@ SDK, coordinate reference system, DOM, Canvas, SVG, WebGL, or React.
 
 ## Install
 
-The package has not yet been published to the npm registry. To evaluate the
-current repository version:
-
 ```sh
-npm install github:seoulpro/stable-marker-layout
+npm install stable-marker-layout
 ```
 
 The package is ESM-only and supports Node.js 20.19 or newer. Its runtime code is
