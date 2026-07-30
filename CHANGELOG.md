@@ -7,6 +7,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-31
+
 ### Added
 
 - Deterministic one-shot and stateful marker layout APIs.
