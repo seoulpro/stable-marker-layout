@@ -469,6 +469,14 @@ Run the synthetic 1,000/10,000/50,000-marker benchmark separately:
 npm run benchmark
 ```
 
+## Related projects
+
+Separate projects that address neighboring problems. Each stands on its own and is not required by stable-marker-layout.
+
+- [render-handoff-contract](https://github.com/seoulpro/render-handoff-contract) — engine-neutral handoff policies and timeline audits for visually continuous renderer transitions, working from caller-supplied observations rather than pixels, DOM, GPU, or network.
+- [playwright-render-contract](https://github.com/seoulpro/playwright-render-contract) — a rule layer for existing Playwright suites that checks readiness, runtime errors, structure, and viewport containment alongside screenshot assertions.
+- [sparse-proximity-graph](https://github.com/seoulpro/sparse-proximity-graph) — builds a deterministic, low-degree, approximately planar graph from unstructured 2D points.
+
 ## License
 
 The software and associated documentation are available under the
